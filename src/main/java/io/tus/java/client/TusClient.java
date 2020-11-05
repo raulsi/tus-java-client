@@ -24,6 +24,7 @@ public class TusClient {
     private TusURLStore urlStore;
     private Map<String, String> headers;
     private int connectTimeout = 5000;
+    private String requestMethod = "POST";
 
     /**
      * Create a new tus client.
@@ -152,6 +153,14 @@ public class TusClient {
         return connectTimeout;
     }
 
+    public void setRequestMethod(String method) {
+        requestMethod = method;
+    }
+
+    public String getRequestMethod() {
+        return requestMethod;
+    }
+
     /**
      * Create a new upload using the Creation extension. Before calling this function, an "upload
      * creation URL" must be defined using {@link #setUploadCreationURL(URL)} or else this
@@ -167,7 +176,7 @@ public class TusClient {
      */
     public TusUploader createUpload(@NotNull TusUpload upload) throws ProtocolException, IOException {
         HttpURLConnection connection = (HttpURLConnection) uploadCreationURL.openConnection();
-        connection.setRequestMethod("POST");
+        connection.setRequestMethod(this.requestMethod);
         prepareConnection(connection);
 
         String encodedMetadata = upload.getEncodedMetadata();
